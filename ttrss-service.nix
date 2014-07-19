@@ -420,16 +420,14 @@ in
     };
   };
 
-  config = {
-    jobs = {
-      ttrssUpdate = {
-        description = "TTRSS feed-update daemon";
-        wantedBy = [ "multi-user.target" ];
-        after = [ "postgresql.service" "httpd.service" ];
-        script = ''
-          ${php}/bin/php ${ttrssRoot}/update.php --daemon
-        '';
-      };
+  systemd.services.ttrssUpdate = {
+    description = "TTRSS feed-update daemon";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "postgresql.service" "httpd.service" ];
+    serviceConfig = {
+      ExecStart = "${php}/bin/php ${ttrssRoot}/update.php --daemon";
+      User = serverInfo.serverConfig.user;
+      Restart = "always";
     };
   };
 
