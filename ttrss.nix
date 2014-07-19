@@ -11,10 +11,10 @@
       services.httpd = {
         enable = true;
         adminAddr = "admin@example.com";
-        # extraSubservices = singleton
-        #   { serviceType = "mediawiki";
-        #     siteName = "Example Wiki";
-        #   };
+        extraSubservices = singleton
+          { function = import ./ttrss-service.nix;
+            # siteName = "Tiny Tiny RSS";
+          };
       };
 
       # Database
