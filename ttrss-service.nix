@@ -349,6 +349,7 @@ in
       cp -r "${ttrssRoot}/lock" "${config.stateDir}/lock"
       cp -r "${ttrssRoot}/cache" "${config.stateDir}/cache"
       cp -r "${ttrssRoot}/feed-icons" "${config.stateDir}/feed-icons"
+      chmod -R u+w "${config.stateDir}"
       chown -R "${serverInfo.serverConfig.user}" "${config.stateDir}"
     fi
     '';
