@@ -263,11 +263,19 @@ in
         ""
     }
 
+    <Directory ${ttrssRoot}>
+        Order allow,deny
+        Allow from all
+        DirectoryIndex index.php
+        Options None
+    </Directory>
+
     Alias ${config.urlPrefix}/feed-icons ${config.stateDir}/feed-icons
 
     <Directory ${config.stateDir}/feed-icons>
         Order allow,deny
         Allow from all
+        Options None
     </Directory>
   '';
 
