@@ -249,6 +249,7 @@ let
     installPhase = ''
       ensureDir $out
       cp -r * $out
+      cp ${ttrssConfig} $out/config.php
     '';
   };
 
