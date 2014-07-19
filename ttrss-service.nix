@@ -288,7 +288,7 @@ in
     };
 
     siteURL = mkOption {
-      default = "http://${siteHostName}/${urlPrefix}";
+      default = "http://${config.siteHostName}/${config.urlPrefix}";
       example = "http://example.org/tt-rss/";
       description = ''
         The full URL to the TTRSS installation.
@@ -326,12 +326,12 @@ in
     notifyMsg = {
       fromName = mkOption {
         default = "Tiny Tiny RSS";
-        desciption = "From-name in 24h digest.";
+        description = "From-name in 24h digest.";
       };
 
       fromAddr = mkOption {
-        default = "noreply@${siteHostName}";
-        desciption = "From-address in 24h digest.";
+        default = "noreply@${config.siteHostName}";
+        description = "From-address in 24h digest.";
       };
 
       subject = mkOption {
@@ -361,7 +361,7 @@ in
         '';
       };
 
-      smptSecure = mkOption {
+      smtpSecure = mkOption {
         default = "";
         example = "tls";
         description = ''
