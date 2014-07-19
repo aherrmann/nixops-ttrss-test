@@ -33,14 +33,13 @@ let
         // *** Basic settings (important!) ***
         // ***********************************
 
-        // TODO: Define url path
-        define('SELF_URL_PATH', 'http://192.168.56.101/ttrss');
+        define('SELF_URL_PATH', '${config.siteURL}');
         // Full URL of your tt-rss installation. This should be set to the
         // location of tt-rss directory, e.g. http://example.org/tt-rss/
         // You need to set this option correctly otherwise several features
         // including PUSH, bookmarklets and browser integration will not work properly.
 
-        define('FEED_CRYPT_KEY', ''');
+        define('FEED_CRYPT_KEY', '${config.cryptKey}');
         // Key used for encryption of passwords for password-protected feeds
         // in the database. A string of 24 random characters. If left blank, encryption
         // is not used. Requires mcrypt functions.
@@ -146,8 +145,7 @@ let
         // and potentially might lead to data loss or server exploit. Disabled
         // by default.
 
-        // TODO: Use admin email
-        define('REG_NOTIFY_ADDRESS', 'user@your.domain.dom');
+        define('REG_NOTIFY_ADDRESS', '${config.notifyContact}');
         // Email address to send new user notifications to.
 
         define('REG_MAX_USERS', 10);
@@ -173,25 +171,24 @@ let
         // *** Email and digest settings ***
         // *********************************
 
-        // TODO: Define from adress
-        define('SMTP_FROM_NAME', 'Tiny Tiny RSS');
-        define('SMTP_FROM_ADDRESS', 'noreply@your.domain.dom');
+        define('SMTP_FROM_NAME', '${config.notifyMsg.fromName}');
+        define('SMTP_FROM_ADDRESS', '${config.notifyMsg.fromAddr}');
         // Name, address and subject for sending outgoing mail. This applies
         // to password reset notifications, digest emails and any other mail.
 
-        define('DIGEST_SUBJECT', '[tt-rss] New headlines for last 24 hours');
+        define('DIGEST_SUBJECT', '${config.notifyMsg.subject}');
         // Subject line for email digests
 
-        define('SMTP_SERVER', ''');
+        define('SMTP_SERVER', '${config.notifyMsg.smtpServer}');
         // Hostname:port combination to send outgoing mail (i.e. localhost:25).
         // Blank - use system MTA.
 
-        define('SMTP_LOGIN', ''');
-        define('SMTP_PASSWORD', ''');
+        define('SMTP_LOGIN', '${config.notifyMsg.smtpLogin}');
+        define('SMTP_PASSWORD', '${config.notifyMsg.smtpPassword}');
         // These two options enable SMTP authentication when sending
         // outgoing mail. Only used with SMTP_SERVER.
 
-        define('SMTP_SECURE', ''');
+        define('SMTP_SECURE', '${config.notifyMsg.smtpSecure}');
         // Used to select a secure SMTP connection. Allowed values: ssl, tls,
         // or empty.
 
@@ -284,6 +281,89 @@ in
   enablePHP = true;
 
   options = {
+    siteURL = mkOption {
+      default = "http://${config.networking.hostName}/${urlPrefix}";
+      example = "http://example.org/tt-rss/";
+      description = ''
+        The full URL to the TTRSS installation.
+      '';
+    };
+
+    urlPrefix = mkOption {
+      default = "";
+      example = "ttrss";
+      description = ''
+        Full URL of your tt-rss installation. This should be set to the              
+        location of tt-rss directory, e.g. http://example.org/tt-rss/                
+        You need to set this option correctly otherwise several features             
+        including PUSH, bookmarklets and browser integration will not work properly. 
+      '';
+    };
+
+    cryptKey = mkOption {
+      default = "";
+      description = ''
+        Key used for encryption of passwords for password-protected feeds
+        in the database. A string of 24 random characters. If left blank, encryption
+        is not used. Requires mcrypt functions.
+        Warning: changing this key will make your stored feed passwords impossible
+        to decrypt.
+      '';
+    };
+
+    notifyContact = mkOption {
+      default = serverInfo.serverConfig.adminAddr;
+      example = "admin@example.com";
+      description = "Email address to send new user notifications to.";
+    };
+
+    notifyMsg = {
+      fromName = mkOption {
+        default = "Tiny Tiny RSS";
+        desciption = "From-name in 24h digest.";
+      };
+
+      fromAddr = mkOption {
+        default = "noreply@${config.networking.hostName}";
+        desciption = "From-address in 24h digest.";
+      };
+
+      subject = mkOption {
+        default = "[tt-rss] New headlines for last 24 hours";
+        description = "Subject line in 24h digest.";
+      };
+
+      smtpServer = mkOption {
+        default = "";
+        example = "example.com:25";
+        description = ''
+          Send messages through this server. If empty, use system MTA.
+        '';
+      };
+
+      smtpLogin = mkOption {
+        default = "";
+        description = ''
+          Login for SMTP server. Not required if using system MTA.
+        '';
+      };
+
+      smtpPassword = mkOption {
+        default = "";
+        description = ''
+          Password for SMTP server. Not required if using system MTA.
+        '';
+      };
+
+      smptSecure = mkOption {
+        default = "";
+        example = "tls";
+        description = ''
+          Select a secure SMTP connect. Allowed values: ssl, tls, or empty.
+        '';
+      };
+    };
+
     dbType = mkOption {
       default = "postgres";
       example = "mysql";
@@ -323,13 +403,6 @@ in
       description = ''
         The password of the database user.  Warning: this is stored in
         cleartext in the Nix store!
-      '';
-    };
-
-    urlPrefix = mkOption {
-      default = "";
-      description = ''
-        The URL prefix under which the TTRSS service appears.
       '';
     };
 
