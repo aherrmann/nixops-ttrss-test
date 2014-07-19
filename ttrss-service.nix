@@ -262,6 +262,13 @@ in
       else
         ""
     }
+
+    Alias ${config.urlPrefix}/${config.iconsURL} ${config.iconsDir}
+
+    <Directory ${config.iconsDir}>
+        Order allow,deny
+        Allow from all
+    </Directory>
   '';
 
   documentRoot = if config.urlPrefix == "" then ttrssRoot else null;
