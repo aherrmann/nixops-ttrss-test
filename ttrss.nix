@@ -13,7 +13,7 @@
         adminAddr = "admin@example.com";
         extraSubservices = singleton
           { function = import ./ttrss-service.nix;
-            # siteName = "Tiny Tiny RSS";
+            siteHostName = "192.168.56.101";
           };
       };
 
