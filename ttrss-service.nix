@@ -346,13 +346,19 @@ in
     };
   };
 
-  startupScript = pkgs.writeScript "ttrss_startup.sh"
+  startupScript = pkgs.writeScript "ttrss_startup.sh" ''
     # Initialise the database automagically if we're using a Postgres
     # server on localhost.
-    (optionalString (config.dbType == "postgres" && config.dbServer == "") ''
+    ${(optionalString (config.dbType == "postgres" && config.dbServer == "") ''
       if ! ${pkgs.postgresql}/bin/psql -l | grep -q ' ${config.dbName} ' ; then
           ${pkgs.postgresql}/bin/createuser --no-superuser --no-createdb --no-createrole "${config.dbUser}" || true
           ${pkgs.postgresql}/bin/createdb "${config.dbName}" -O "${config.dbUser}"
       fi
-    '');
+      '')}
+
+    # Copy the data directories into place.
+    [ ! -e "${config.lockDir}" ] && cp -r ${ttrssRoot}/lock ${config.lockDir}
+    [ ! -e "${config.cacheDir}" ] && cp -r ${ttrssRoot}/cache ${config.cacheDir}
+    [ ! -e "${config.iconsDir}" ] && cp -r ${ttrssRoot}/feed-icons ${config.iconsDir}
+    '';
 }
