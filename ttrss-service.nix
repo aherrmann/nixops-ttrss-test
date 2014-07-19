@@ -420,6 +420,19 @@ in
     };
   };
 
+  config = {
+    jobs = {
+      ttrssUpdate = {
+        description = "TTRSS feed-update daemon";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "postgresql.service" "httpd.service" ];
+        script = ''
+          ${php}/bin/php ${ttrssRoot}/update.php --daemon
+        '';
+      };
+    };
+  };
+
   startupScript = pkgs.writeScript "ttrss_startup.sh" ''
     # Initialise the database automagically if we're using a Postgres
     # server on localhost.
