@@ -340,6 +340,7 @@ in
       if ! ${pkgs.postgresql}/bin/psql -l | grep -q ' ${config.dbName} ' ; then
           ${pkgs.postgresql}/bin/createuser --no-superuser --no-createdb --no-createrole "${config.dbUser}" || true
           ${pkgs.postgresql}/bin/createdb "${config.dbName}" -O "${config.dbUser}"
+          ${pkgs.postgresql}/bin/psql -U "${config.dbUser}" "${config.dbName}" < "${ttrssRoot}/schema/ttrss_schema_pgsql.sql"
       fi
       '')}
 
