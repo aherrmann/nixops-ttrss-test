@@ -8,7 +8,7 @@ let
     if dbType == "postgres" then
       "pgsql"
     else
-      builtins.trace "Unknown value for `dbType`!"
+      throw "Unknown value for `dbType`!"
       ""
     ;
 
