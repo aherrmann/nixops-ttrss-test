@@ -72,15 +72,15 @@ let
         // then most probably you are using the CGI binary. If you are unsure what to
         // put in here, ask your hosting provider.
 
-        define('LOCK_DIRECTORY', '${config.lockDir}');
+        define('LOCK_DIRECTORY', '${config.stateDir}/lock');
         // Directory for lockfiles, must be writable to the user you run
         // daemon process or cronjobs under.
 
-        define('CACHE_DIR', '${config.cacheDir}');
+        define('CACHE_DIR', '${config.stateDir}/cache');
         // Local cache directory for RSS feed content.
 
-        define('ICONS_DIR', "${config.iconsDir}");
-        define('ICONS_URL', "${config.iconsURL}");
+        define('ICONS_DIR', "${config.stateDir}/feed-icons");
+        define('ICONS_URL', "feed-icons");
         // Local and URL path to the directory, where feed favicons are stored.
         // Unless you really know what you're doing, please keep those relative
         // to tt-rss main directory.
@@ -263,9 +263,9 @@ in
         ""
     }
 
-    Alias ${config.urlPrefix}/${config.iconsURL} ${config.iconsDir}
+    Alias ${config.urlPrefix}/feed-icons ${config.stateDir}/feed-icons
 
-    <Directory ${config.iconsDir}>
+    <Directory ${config.stateDir}/feed-icons>
         Order allow,deny
         Allow from all
     </Directory>
@@ -325,24 +325,11 @@ in
       '';
     };
 
-    lockDir = mkOption {
-      default = "/var/ttrss/lock";
-      description = "Directory for lock-files.";
-    };
-
-    cacheDir = mkOption {
-      default = "/var/ttrss/cache";
-      description = "Local cache directory for RSS feed content.";
-    };
-
-    iconsDir = mkOption {
-      default = "/var/ttrss/feed-icons";
-      description = "Directory for local favicons storage.";
-    };
-
-    iconsURL = mkOption {
-      default = "feed-icons";
-      description = "URL to local favicons storage.";
+    stateDir = mkOption {
+      default = "/var/ttrss";
+      description = ''
+        Local storage directory for TTRS. Used for locks, cache, etc...
+      '';
     };
   };
 
@@ -357,8 +344,12 @@ in
       '')}
 
     # Copy the data directories into place.
-    [ ! -e "${config.lockDir}" ] && cp -r ${ttrssRoot}/lock ${config.lockDir}
-    [ ! -e "${config.cacheDir}" ] && cp -r ${ttrssRoot}/cache ${config.cacheDir}
-    [ ! -e "${config.iconsDir}" ] && cp -r ${ttrssRoot}/feed-icons ${config.iconsDir}
+    if [ ! -e "${config.stateDir}" ]; then
+      mkdir -p "${config.stateDir}"
+      cp -r "${ttrssRoot}/lock" "${config.stateDir}/lock"
+      cp -r "${ttrssRoot}/cache" "${config.stateDir}/cache"
+      cp -r "${ttrssRoot}/feed-icons" "${config.stateDir}/feed-icons"
+      chown -R "${serverInfo.serverConfig.user}" "${config.stateDir}"
+    fi
     '';
 }
