@@ -326,17 +326,17 @@ in
     };
 
     lockDir = mkOption {
-      default = "/data/ttrss/lock";
+      default = "/var/ttrss/lock";
       description = "Directory for lock-files.";
     };
 
     cacheDir = mkOption {
-      default = "/data/ttrss/cache";
+      default = "/var/ttrss/cache";
       description = "Local cache directory for RSS feed content.";
     };
 
     iconsDir = mkOption {
-      default = "/data/ttrss/feed-icons";
+      default = "/var/ttrss/feed-icons";
       description = "Directory for local favicons storage.";
     };
 
