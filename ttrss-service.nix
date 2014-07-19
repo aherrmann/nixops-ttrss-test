@@ -72,15 +72,15 @@ let
         // then most probably you are using the CGI binary. If you are unsure what to
         // put in here, ask your hosting provider.
 
-        define('LOCK_DIRECTORY', 'lock');
+        define('LOCK_DIRECTORY', '${config.lockDir}');
         // Directory for lockfiles, must be writable to the user you run
         // daemon process or cronjobs under.
 
-        define('CACHE_DIR', 'cache');
+        define('CACHE_DIR', '${config.cacheDir}');
         // Local cache directory for RSS feed content.
 
-        define('ICONS_DIR', "feed-icons");
-        define('ICONS_URL', "feed-icons");
+        define('ICONS_DIR', "${config.iconsDir}");
+        define('ICONS_URL', "${config.iconsURL}");
         // Local and URL path to the directory, where feed favicons are stored.
         // Unless you really know what you're doing, please keep those relative
         // to tt-rss main directory.
@@ -316,6 +316,26 @@ in
       description = ''
         The URL prefix under which the TTRSS service appears.
       '';
+    };
+
+    lockDir = mkOption {
+      default = "/data/ttrss/lock";
+      description = "Directory for lock-files.";
+    };
+
+    cacheDir = mkOption {
+      default = "/data/ttrss/cache";
+      description = "Local cache directory for RSS feed content.";
+    };
+
+    iconsDir = mkOption {
+      default = "/data/ttrss/feed-icons";
+      description = "Directory for local favicons storage.";
+    };
+
+    iconsURL = mkOption {
+      default = "feed-icons";
+      description = "URL to local favicons storage.";
     };
   };
 
