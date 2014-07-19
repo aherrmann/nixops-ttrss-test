@@ -281,8 +281,14 @@ in
   enablePHP = true;
 
   options = {
+    siteHostName = mkOption {
+      default = throw "You must specify `siteHostName`.";
+      example = "example.org";
+      description = "The host on which this TTRSS instance is hosted.";
+    };
+
     siteURL = mkOption {
-      default = "http://${config.networking.hostName}/${urlPrefix}";
+      default = "http://${siteHostName}/${urlPrefix}";
       example = "http://example.org/tt-rss/";
       description = ''
         The full URL to the TTRSS installation.
@@ -324,7 +330,7 @@ in
       };
 
       fromAddr = mkOption {
-        default = "noreply@${config.networking.hostName}";
+        default = "noreply@${siteHostName}";
         desciption = "From-address in 24h digest.";
       };
 
