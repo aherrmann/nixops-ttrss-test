@@ -31,11 +31,6 @@
         '';
       };
 
-      imports = [ ./ttrss-update.nix ];
-
-      # TTRSS-Update
-      services.ttrssUpdate.enable = true;
-
       # Firewall
       networking.firewall.allowedTCPPorts = [ 80 ];
     };

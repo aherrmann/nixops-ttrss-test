@@ -16,6 +16,12 @@ with lib;
         description = "Whether to run the TTRSS update daemon.";
       };
 
+      ttrssRoot = mkOption {
+        type = types.string;
+        default = throw "Please specify the TTRSS installation path.";
+        description = "Path to the TTRSS installation.";
+      };
+
     };
 
   };
@@ -28,7 +34,7 @@ with lib;
     systemd.services.ttrssUpdate =
       let
         php = pkgs.php;
-        ttrssRoot = pkgs.ttrss;
+        ttrssRoot = config.services.ttrssUpdate.ttrssRoot;
       in
       {
         description = "Updates TTRSS feeds.";
