@@ -422,6 +422,23 @@ in
     };
   };
 
+  config = {
+
+    systemd.services.ttrssUpdate =
+      {
+        description = "Updates TTRSS feeds.";
+
+        wantedBy = [ "multi-user.target" ];
+
+        after = [ "postgresql.service" "httpd.service" ];
+
+        serviceConfig.ExecStart = ''
+          ${php}/bin/php ${ttrssRoot}/update.php --daemon
+        '';
+      };
+
+  };
+
   startupScript = pkgs.writeScript "ttrss_startup.sh" ''
     # Initialise the database automagically if we're using a Postgres
     # server on localhost.
