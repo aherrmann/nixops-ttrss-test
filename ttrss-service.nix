@@ -280,6 +280,8 @@ in
 
   enablePHP = true;
 
+  extraPath = let ttrss = ttrssRoot; in [ ttrss ];
+
   options = {
     siteHostName = mkOption {
       default = throw "You must specify `siteHostName`.";
