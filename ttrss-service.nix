@@ -317,6 +317,12 @@ in
       '';
     };
 
+    enableUpdate = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable the feed update daemon.";
+    };
+
     notifyContact = mkOption {
       default = serverInfo.serverConfig.adminAddr;
       example = "admin@example.com";
@@ -441,4 +447,19 @@ in
       chown -R "${serverInfo.serverConfig.user}" "${config.stateDir}"
     fi
     '';
+
+  extraSystemdServices = {
+    ttrss-update = mkIf config.enableUpdate {
+      description = "Updates TTRSS feeds.";
+
+      wantedBy = [ "multi-user.target" ];
+
+      after = [ "postgresql.service" "httpd.service" ];
+
+      serviceConfig.ExecStart = ''
+        ${php}/bin/php ${ttrssRoot}/update.php --daemon
+      '';
+      serviceConfig.User = serverInfo.serverConfig.user;
+    };
+  };
 }

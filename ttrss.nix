@@ -14,6 +14,7 @@
         extraSubservices = singleton
           { function = import ./ttrss-service.nix;
             siteHostName = "192.168.56.101";
+            enableUpdate = true;
           };
       };
 
@@ -30,15 +31,6 @@
           ttrssusers wwwrun ttrss
         '';
       };
-
-      imports = [ ./ttrss-update.nix ];
-
-      # TTRSS-Update
-      # services.ttrssUpdate = {
-      #   enable = true;
-      #   # How to get the ttrssRoot path out of the ttrss subservice?
-      #   ttrssRoot = ???;
-      # };
 
       # Firewall
       networking.firewall.allowedTCPPorts = [ 80 ];
